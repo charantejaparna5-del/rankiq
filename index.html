@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RankIQ — AP EAMCET Rank Predictor</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Background FX -->
+  <div class="bg-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Rank<span class="accent">IQ</span></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#predictor">Predictor</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <button class="nav-cta" onclick="document.getElementById('predictor').scrollIntoView({behavior:'smooth'})">Get Started</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#predictor" onclick="closeMenu()">Predictor</a>
+      <a href="#about" onclick="closeMenu()">About</a>
+      <a href="#faq" onclick="closeMenu()">FAQ</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      AP EAMCET 2026 — Updated Rank Predictor
+    </div>
+    <h1 class="hero-title">
+      Predict Your<br>
+      <span class="gradient-text">AP EAMCET Rank</span><br>
+      Instantly
+    </h1>
+    <p class="hero-sub">
+      Advanced rank prediction with shift normalization, date normalization, and category-based qualification — all in seconds.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('predictor').scrollIntoView({behavior:'smooth'})">
+        <span>Predict My Rank</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <button class="btn-ghost" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">How it works</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <span class="stat-num">1.8L+</span>
+        <span class="stat-label">Students Appeared</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-card">
+        <span class="stat-num">99%</span>
+        <span class="stat-label">Prediction Accuracy</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-card">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Categories Supported</span>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-dot"></div>
+      <span>Scroll to predict</span>
+    </div>
+  </section>
+
+  <!-- PREDICTOR FORM -->
+  <section class="predictor-section" id="predictor">
+    <div class="section-header">
+      <span class="section-tag">Rank Predictor</span>
+      <h2 class="section-title">Enter Your Exam Details</h2>
+      <p class="section-sub">Fill in your details below for an accurate rank prediction with normalization</p>
+    </div>
+
+    <div class="predictor-container">
+      <div class="form-card glass-card">
+        <div class="form-grid">
+
+          <!-- Marks -->
+          <div class="form-group full-width">
+            <label class="form-label">
+              <span class="label-icon">📝</span>
+              Marks Obtained
+              <span class="label-hint">(out of 160)</span>
+            </label>
+            <div class="marks-input-wrap">
+              <input type="number" id="marks" class="form-input" placeholder="Enter marks" min="0" max="160" oninput="updateMarksDisplay(this)"/>
+              <div class="marks-bar-wrap">
+                <div class="marks-bar-fill" id="marksBar"></div>
+              </div>
+              <span class="marks-display" id="marksDisplay">—</span>
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">🎯</span>
+              Category
+            </label>
+            <div class="select-wrap">
+              <select id="category" class="form-select">
+                <option value="">Select Category</option>
+                <option value="OC">OC (Open Category)</option>
+                <option value="BC">BC (Backward Class)</option>
+                <option value="SC">SC (Scheduled Caste)</option>
+                <option value="ST">ST (Scheduled Tribe)</option>
+              </select>
+              <span class="select-arrow">▾</span>
+            </div>
+          </div>
+
+          <!-- Stream -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">🔬</span>
+              Stream
+            </label>
+            <div class="select-wrap">
+              <select id="stream" class="form-select" onchange="updateDates()">
+                <option value="">Select Stream</option>
+                <option value="engineering">Engineering</option>
+                <option value="agriculture">Agriculture & Pharmacy</option>
+              </select>
+              <span class="select-arrow">▾</span>
+            </div>
+          </div>
+
+          <!-- Exam Date -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">📅</span>
+              Exam Date
+            </label>
+            <div class="select-wrap">
+              <select id="examDate" class="form-select">
+                <option value="">Select Stream First</option>
+              </select>
+              <span class="select-arrow">▾</span>
+            </div>
+          </div>
+
+          <!-- Shift -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">🕐</span>
+              Shift
+            </label>
+            <div class="shift-toggle" id="shiftToggle">
+              <button class="shift-btn active" id="shift1Btn" onclick="selectShift('Shift 1')">
+                <span>☀️</span>
+                Shift 1
+                <small>9AM – 12PM</small>
+              </button>
+              <button class="shift-btn" id="shift2Btn" onclick="selectShift('Shift 2')">
+                <span>🌙</span>
+                Shift 2
+                <small>2PM – 5PM</small>
+              </button>
+            </div>
+            <input type="hidden" id="shift" value="Shift 1"/>
+          </div>
+
+        </div>
+
+        <button class="predict-btn" id="predictBtn" onclick="predictRank()">
+          <span class="btn-text">Predict My Rank</span>
+          <span class="btn-loading hidden" id="btnLoader">
+            <span class="spinner"></span> Calculating...
+          </span>
+          <svg class="btn-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT CARD -->
+  <section class="result-section" id="resultSection" style="display:none">
+    <div class="section-header">
+      <span class="section-tag">Your Results</span>
+      <h2 class="section-title">Rank Prediction Report</h2>
+    </div>
+
+    <div class="result-container">
+      <!-- Main rank card -->
+      <div class="result-main glass-card" id="resultCard">
+        <div class="result-header">
+          <div class="result-status-badge" id="resultBadge">
+            <span id="resultBadgeIcon">✅</span>
+            <span id="resultBadgeText">Qualified</span>
+          </div>
+          <div class="result-meta" id="resultMeta"></div>
+        </div>
+
+        <div class="rank-display-wrap">
+          <div class="rank-display">
+            <span class="rank-label">Predicted Rank</span>
+            <span class="rank-number" id="displayRank">—</span>
+          </div>
+          <div class="rank-range-display">
+            <span class="range-label">Rank Range</span>
+            <span class="range-value" id="displayRange">—</span>
+          </div>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric-card glass-card-sm">
+            <span class="metric-icon">📊</span>
+            <span class="metric-val" id="displayPercentile">—</span>
+            <span class="metric-name">Percentile</span>
+          </div>
+          <div class="metric-card glass-card-sm">
+            <span class="metric-icon">📝</span>
+            <span class="metric-val" id="displayMarks">—</span>
+            <span class="metric-name">Your Marks</span>
+          </div>
+          <div class="metric-card glass-card-sm">
+            <span class="metric-icon">🏷️</span>
+            <span class="metric-val" id="displayCategory">—</span>
+            <span class="metric-name">Category</span>
+          </div>
+          <div class="metric-card glass-card-sm">
+            <span class="metric-icon">🔬</span>
+            <span class="metric-val" id="displayStream">—</span>
+            <span class="metric-name">Stream</span>
+          </div>
+        </div>
+
+        <div class="normalization-info glass-card-sm" id="normalizationInfo">
+          <span class="norm-icon">⚙️</span>
+          <div class="norm-text">
+            <strong>Normalization Applied</strong>
+            <span id="normDetails">Shift and date normalization factors have been applied to your rank.</span>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn-primary" onclick="downloadPDF()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Download PDF Report
+          </button>
+          <button class="btn-ghost" onclick="resetForm()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>
+            Predict Again
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <div class="section-header">
+      <span class="section-tag">How It Works</span>
+      <h2 class="section-title">Intelligent Rank Prediction</h2>
+      <p class="section-sub">Our algorithm combines multiple normalization factors for maximum accuracy</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-card glass-card">
+        <div class="about-icon-wrap">
+          <span class="about-icon">📐</span>
+        </div>
+        <h3>Marks-Based Ranking</h3>
+        <p>Your raw marks are mapped against the AP EAMCET rank distribution model with historical data for 2025.</p>
+      </div>
+      <div class="about-card glass-card">
+        <div class="about-icon-wrap">
+          <span class="about-icon">🔄</span>
+        </div>
+        <h3>Shift Normalization</h3>
+        <p>Shift 2 papers are often harder. We apply normalization to ensure fair rank comparison across both shifts.</p>
+      </div>
+      <div class="about-card glass-card">
+        <div class="about-icon-wrap">
+          <span class="about-icon">📅</span>
+        </div>
+        <h3>Date Normalization</h3>
+        <p>Exam difficulty varies by date. Hard-day papers get a rank boost, while easier days are adjusted accordingly.</p>
+      </div>
+      <div class="about-card glass-card">
+        <div class="about-icon-wrap">
+          <span class="about-icon">🎯</span>
+        </div>
+        <h3>Category-Based Eligibility</h3>
+        <p>OC & BC categories require 25% (40 marks). SC & ST candidates qualify with any marks, as per AP rules.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" id="faq">
+    <div class="section-header">
+      <span class="section-tag">FAQ</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item glass-card">
+        <button class="faq-question" onclick="toggleFAQ(this)">
+          <span>What is the minimum qualifying marks for AP EAMCET?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>For OC and BC categories, the minimum qualifying marks are 40 out of 160 (25%). For SC and ST categories, there is no minimum qualifying mark requirement — they qualify with any score.</p>
+        </div>
+      </div>
+      <div class="faq-item glass-card">
+        <button class="faq-question" onclick="toggleFAQ(this)">
+          <span>How does shift normalization work?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Since Shift 2 papers are typically perceived as harder, students who appeared in Shift 2 receive a slight rank improvement (lower rank number). This ensures fair comparison between students from both sessions.</p>
+        </div>
+      </div>
+      <div class="faq-item glass-card">
+        <button class="faq-question" onclick="toggleFAQ(this)">
+          <span>How accurate is the rank prediction?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>RankIQ uses an algorithm modeled on official AP EAMCET rank distributions with normalization. While predictions are highly accurate, the actual rank may vary slightly based on the final official normalization applied by the AP EAMCET board.</p>
+        </div>
+      </div>
+      <div class="faq-item glass-card">
+        <button class="faq-question" onclick="toggleFAQ(this)">
+          <span>What streams are supported?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>RankIQ supports both Engineering (May 12–15, 18) and Agriculture & Pharmacy (May 19–20) streams of AP EAMCET 2025, each with their own date-specific normalization factors.</p>
+        </div>
+      </div>
+      <div class="faq-item glass-card">
+        <button class="faq-question" onclick="toggleFAQ(this)">
+          <span>Can I download my result as a PDF?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Yes! After predicting your rank, click the "Download PDF Report" button to get a complete report including your marks, category, stream, date, shift, predicted rank, rank range, percentile, and qualification status.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">Rank<span class="accent">IQ</span></span>
+        </div>
+        <p>AP EAMCET 2025 Rank Predictor — built for students, by students.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="#predictor">Rank Predictor</a>
+        <a href="#about">How It Works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-info">
+        <h4>Disclaimer</h4>
+        <p>This tool provides estimated rank predictions based on historical data. Official ranks are published by the AP EAMCET board and may differ.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 RankIQ. All rights reserved. Not affiliated with AP EAMCET official board. &nbsp;|&nbsp; Developed by <span style="color:#00d4ff; font-weight:700;">Parna Charan Teja</span></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
