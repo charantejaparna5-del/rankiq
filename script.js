@@ -7,15 +7,15 @@
 
 const EXAM_DATES = {
   engineering: [
-    { value: "May 12", label: "May 12, 2025", difficulty: "medium" },
-    { value: "May 13", label: "May 13, 2025", difficulty: "hard" },
-    { value: "May 14", label: "May 14, 2025", difficulty: "medium" },
-    { value: "May 15", label: "May 15, 2025", difficulty: "easy" },
-    { value: "May 18", label: "May 18, 2025", difficulty: "hard" },
+    { value: "May 12", label: "May 12, 2026", difficulty: "medium" },
+    { value: "May 13", label: "May 13, 2026", difficulty: "hard" },
+    { value: "May 14", label: "May 14, 2026", difficulty: "medium" },
+    { value: "May 15", label: "May 15, 2026", difficulty: "easy" },
+    { value: "May 18", label: "May 18, 2026", difficulty: "hard" },
   ],
   agriculture: [
-    { value: "May 19", label: "May 19, 2025", difficulty: "medium" },
-    { value: "May 20", label: "May 20, 2025", difficulty: "easy" },
+    { value: "May 19", label: "May 19, 2026", difficulty: "medium" },
+    { value: "May 20", label: "May 20, 2026", difficulty: "easy" },
   ],
 };
 
