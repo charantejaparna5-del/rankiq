@@ -194,7 +194,19 @@ function formatRankFull(n) {
 
 // ---- MAIN PREDICT FUNCTION ----
 function predictRank() {
-  const marks = parseInt(document.getElementById("marks").value);
+  const studentName = document.getElementById("studentName").value.trim();
+const phoneNumber = document.getElementById("phoneNumber").value.trim();
+
+if (!studentName) {
+  showToast("Please enter student name.", "error");
+  return;
+}
+
+if (!/^[6-9]\d{9}$/.test(phoneNumber)) {
+  showToast("Please enter a valid mobile number.", "error");
+  return;
+}
+   const marks = parseInt(document.getElementById("marks").value);
   const category = document.getElementById("category").value;
   const stream = document.getElementById("stream").value;
   const examDate = document.getElementById("examDate").value;
