@@ -2,6 +2,15 @@
    RankIQ — script.js
    AP EAMCET Rank Predictor
 =========================== */
+// Supabase Connection
+const supabaseUrl = "https://ajnwiydxskyswasgbmvs.supabase.co/rest/v1/";
+
+const supabaseKey = "sb_publishable_IIG-XRYbElB_-WQliOo3Hw_E0uAOKbQ";
+
+const supabaseClient = supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
 
 // ---- DATA ----
 
