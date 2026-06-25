@@ -2,15 +2,11 @@
    RankIQ — script.js
    AP EAMCET Rank Predictor
 =========================== */
+
 // Supabase Connection
-const supabaseUrl = "https://ajnwiydxskyswasgbmvs.supabase.co/rest/v1/";
-
-const supabaseKey = "sb_publishable_IIG-XRYbElB_-WQliOo3Hw_E0uAOKbQ";
-
-const supabaseClient = supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-);
+const supabaseUrl = "https://ajnwiydxskyswasgbmvs.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqbndpeWR4c2t5c3dhc2dibXZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0MDY0MDYsImV4cCI6MjA2Mjk4MjQwNn0.sb_publishable_IIG-XRYbElB_-WQliOo3Hw_E0uAOKbQ";
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // ---- DATA ----
 
@@ -28,7 +24,7 @@ const EXAM_DATES = {
   ],
 };
 
-// Base rank thresholds [minMarks, topRank, topRankLabel]
+// Base rank thresholds
 const RANK_TABLE = [
   { min: 150, baseRank: 500,    label: "Top 1,000" },
   { min: 140, baseRank: 2000,   label: "Top 3,000" },
@@ -87,7 +83,6 @@ function updateMarksDisplay(input) {
 function updateDates() {
   const stream = document.getElementById("stream").value;
   const select = document.getElementById("examDate");
-  select.innerHTML = "";
 
   if (!stream) {
     select.innerHTML = '<option value="">Select Stream First</option>';
@@ -120,7 +115,6 @@ function getBaseRank(marks) {
 }
 
 function interpolateRank(marks) {
-  // Find the bracket and interpolate smoothly
   for (let i = 0; i < RANK_TABLE.length - 1; i++) {
     const upper = RANK_TABLE[i];
     const lower = RANK_TABLE[i + 1];
@@ -204,18 +198,19 @@ function formatRankFull(n) {
 // ---- MAIN PREDICT FUNCTION ----
 function predictRank() {
   const studentName = document.getElementById("studentName").value.trim();
-const phoneNumber = document.getElementById("phoneNumber").value.trim();
+  const phoneNumber = document.getElementById("phoneNumber").value.trim();
 
-if (!studentName) {
-  showToast("Please enter student name.", "error");
-  return;
-}
+  if (!studentName) {
+    showToast("Please enter student name.", "error");
+    return;
+  }
 
-if (!/^[6-9]\d{9}$/.test(phoneNumber)) {
-  showToast("Please enter a valid mobile number.", "error");
-  return;
-}
-   const marks = parseInt(document.getElementById("marks").value);
+  if (!/^[6-9]\d{9}$/.test(phoneNumber)) {
+    showToast("Please enter a valid mobile number.", "error");
+    return;
+  }
+
+  const marks = parseInt(document.getElementById("marks").value);
   const category = document.getElementById("category").value;
   const stream = document.getElementById("stream").value;
   const examDate = document.getElementById("examDate").value;
@@ -250,7 +245,7 @@ if (!/^[6-9]\d{9}$/.test(phoneNumber)) {
     const streamLabel = stream === "engineering" ? "Engineering" : "Agriculture & Pharmacy";
     const dateLabel = EXAM_DATES[stream]?.find((d) => d.value === examDate)?.label || examDate;
 
-    currentResult = { marks, category, stream: streamLabel, examDate: dateLabel, shift, result, qualified, percentile };
+    currentResult = { studentName, phoneNumber, marks, category, stream: streamLabel, examDate: dateLabel, shift, result, qualified, percentile };
 
     displayResult(currentResult);
 
@@ -264,11 +259,9 @@ if (!/^[6-9]\d{9}$/.test(phoneNumber)) {
 
 // ---- DISPLAY RESULT ----
 function displayResult({ marks, category, stream, examDate, shift, result, qualified, percentile }) {
-  // Show section
   const section = document.getElementById("resultSection");
   section.style.display = "block";
 
-  // Status badge
   const badge = document.getElementById("resultBadge");
   const badgeIcon = document.getElementById("resultBadgeIcon");
   const badgeText = document.getElementById("resultBadgeText");
@@ -276,26 +269,17 @@ function displayResult({ marks, category, stream, examDate, shift, result, quali
   badgeIcon.textContent = qualified ? "✅" : "❌";
   badgeText.textContent = qualified ? "Qualified" : "Not Qualified";
 
-  // Meta
   document.getElementById("resultMeta").textContent = `${examDate} · ${shift} · ${stream}`;
-
-  // Rank
   document.getElementById("displayRank").textContent = formatRankFull(result.rank);
-
-  // Range
   document.getElementById("displayRange").textContent =
     `${formatRankFull(result.rangeMin)} – ${formatRankFull(result.rangeMax)}`;
 
-  // Metrics
   document.getElementById("displayPercentile").textContent = percentile + "%";
   document.getElementById("displayMarks").textContent = marks + "/160";
   document.getElementById("displayCategory").textContent = category;
   document.getElementById("displayStream").textContent = stream === "Engineering" ? "Engg." : "Agri/Ph.";
-
-  // Normalization note
   document.getElementById("normDetails").textContent = result.normDetails;
 
-  // Scroll to result
   setTimeout(() => {
     section.scrollIntoView({ behavior: "smooth", block: "start" });
   }, 100);
@@ -305,6 +289,8 @@ function displayResult({ marks, category, stream, examDate, shift, result, quali
 
 // ---- RESET ----
 function resetForm() {
+  document.getElementById("studentName").value = "";
+  document.getElementById("phoneNumber").value = "";
   document.getElementById("marks").value = "";
   document.getElementById("category").value = "";
   document.getElementById("stream").value = "";
@@ -349,15 +335,14 @@ async function downloadPDF() {
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(200, 230, 255);
-  doc.text("AP EAMCET 2025 Rank Prediction Report", margin, 32);
+  doc.text("AP EAMCET 2026 Rank Prediction Report", margin, 32);
 
-  // Date on right
   doc.setTextColor(200, 230, 255);
   doc.text(`Generated: ${new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}`, W - margin, 22, { align: "right" });
 
   y = 55;
 
-  // Qualification status pill
+  // Qualification status
   const statusColor = qualified ? [0, 255, 140] : [255, 79, 79];
   doc.setFillColor(...statusColor);
   doc.roundedRect(margin, y, 60, 10, 5, 5, "F");
@@ -393,6 +378,8 @@ async function downloadPDF() {
 
   // Details table
   const rows = [
+    ["Student Name", currentResult.studentName],
+    ["Mobile Number", currentResult.phoneNumber],
     ["Marks Obtained", `${marks} / 160`],
     ["Percentile", `${percentile}%`],
     ["Category", category],
@@ -443,7 +430,7 @@ async function downloadPDF() {
   doc.setFontSize(8);
   doc.setTextColor(80, 100, 130);
   doc.text("This is an estimated prediction. Official ranks are published by the AP EAMCET board.", W / 2, 280, { align: "center" });
-  doc.text("© 2025 RankIQ — Not affiliated with AP EAMCET official board.", W / 2, 287, { align: "center" });
+  doc.text("© 2026 RankIQ — Not affiliated with AP EAMCET official board.", W / 2, 287, { align: "center" });
 
   doc.save(`RankIQ_${category}_${marks}marks_${new Date().toISOString().slice(0, 10)}.pdf`);
   showToast("PDF downloaded successfully!", "success");
@@ -453,10 +440,7 @@ async function downloadPDF() {
 function toggleFAQ(btn) {
   const item = btn.closest(".faq-item");
   const isOpen = item.classList.contains("open");
-
-  // Close all
   document.querySelectorAll(".faq-item.open").forEach((el) => el.classList.remove("open"));
-
   if (!isOpen) item.classList.add("open");
 }
 
@@ -518,7 +502,6 @@ document.querySelectorAll(".glass-card, .about-card, .faq-item, .section-header"
 
 // ---- INIT ----
 window.addEventListener("DOMContentLoaded", () => {
-  // Stagger card animations
   document.querySelectorAll(".about-card").forEach((card, i) => {
     card.style.transitionDelay = `${i * 0.08}s`;
   });
