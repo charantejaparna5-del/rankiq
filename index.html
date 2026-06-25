@@ -95,35 +95,35 @@
     <div class="predictor-container">
       <div class="form-card glass-card">
         <div class="form-grid">
-          <!-- Student Name -->
-<div class="form-group">
-  <label class="form-label">
-    <span class="label-icon">👤</span>
-    Student Name
-  </label>
-  <input
-    type="text"
-    id="studentName"
-    class="form-input"
-    placeholder="Enter your full name"
-  />
-</div>
 
-<!-- Mobile Number -->
-<div class="form-group">
-  <label class="form-label">
-    <span class="label-icon">📞</span>
-    Mobile Number
-  </label>
-  <input
-    type="tel"
-    id="phoneNumber"
-    class="form-input"
-    placeholder="Enter mobile number"
-    maxlength="10"
-  />
-</div>
-          
+          <!-- Student Name -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">👤</span>
+              Student Name
+            </label>
+            <input
+              type="text"
+              id="studentName"
+              class="form-input"
+              placeholder="Enter your full name"
+            />
+          </div>
+
+          <!-- Mobile Number -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">📞</span>
+              Mobile Number
+            </label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              class="form-input"
+              placeholder="Enter mobile number"
+              maxlength="10"
+            />
+          </div>
 
           <!-- Marks -->
           <div class="form-group full-width">
@@ -175,21 +175,19 @@
             </div>
           </div>
 
-          <!-- Exam Date -->
-         <select id="examDate" class="form-select">
-    <option value="">Select Exam Date</option>
-
-    <!-- Engineering -->
-    <option value="2026-05-12">May 12, 2026 </option>
-    <option value="2026-05-13">May 13, 2026 </option>
-    <option value="2026-05-14">May 14, 2026 </option>
-    <option value="2026-05-15">May 15, 2026 </option>
-    <option value="2026-05-18">May 18, 2026 </option>
-
-    <!-- Agriculture & Pharmacy  -->
-    <option value="2026-05-19">May 19, 2026 </option>
-    <option value="2026-05-20">May 20, 2026 </option>
-</select>
+          <!-- Exam Date — FIXED: proper form-group wrapper, no hardcoded options -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">📅</span>
+              Exam Date
+            </label>
+            <div class="select-wrap">
+              <select id="examDate" class="form-select">
+                <option value="">Select Stream First</option>
+              </select>
+              <span class="select-arrow">▾</span>
+            </div>
+          </div>
 
           <!-- Shift -->
           <div class="form-group">
@@ -378,7 +376,7 @@
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <p>RankIQ supports both Engineering (May 12–15, 18) and Agriculture & Pharmacy (May 19–20) streams of AP EAMCET 2025, each with their own date-specific normalization factors.</p>
+          <p>RankIQ supports both Engineering (May 12–15, 18) and Agriculture & Pharmacy (May 19–20) streams of AP EAMCET 2026, each with their own date-specific normalization factors.</p>
         </div>
       </div>
       <div class="faq-item glass-card">
@@ -401,7 +399,7 @@
           <span class="logo-icon">⚡</span>
           <span class="logo-text">Rank<span class="accent">IQ</span></span>
         </div>
-        <p>AP EAMCET 2025 Rank Predictor — built for students, by students.</p>
+        <p>AP EAMCET 2026 Rank Predictor — built for students, by students.</p>
       </div>
       <div class="footer-links">
         <h4>Quick Links</h4>
@@ -419,6 +417,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
