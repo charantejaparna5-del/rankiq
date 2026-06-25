@@ -3,11 +3,15 @@
    AP EAMCET Rank Predictor
 =========================== */
 
-// Supabase Connection
-const supabaseUrl = "https://ajnwiydxskyswasgbmvs.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqbndpeWR4c2t5c3dhc2dibXZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0MDY0MDYsImV4cCI6MjA2Mjk4MjQwNn0.sb_publishable_IIG-XRYbElB_-WQliOo3Hw_E0uAOKbQ";
-const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-
+// Supabase Connection - safely initialized
+let supabaseClient = null;
+try {
+  const supabaseUrl = "https://ajnwiydxskyswasgbmvs.supabase.co";
+  const supabaseKey = "YOUR_REAL_ANON_KEY_HERE"; // paste from Supabase dashboard
+  supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+} catch(e) {
+  console.warn("Supabase init failed:", e);
+}
 // ---- DATA ----
 
 const EXAM_DATES = {
